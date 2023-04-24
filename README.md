@@ -12,6 +12,7 @@ By doing so, this project will enable local real estate agents to offer more inf
 The project uses two datasets: 
 * [train.csv](/data/original/train.csv): This data contains all of the training data for the model 
 * [test.csv](/data/original/test.csv): This data contains the test data for the model. The target variable (`saleprice`) is removed from this data set. 
+
 The following file is also available: 
 * [sample_sub_reg.csv](/data/original/sample_sub_reg.csv): This is an example of a correctly formatted submission for this challenge (with a random number provided as predictions for `saleprice`)
 
