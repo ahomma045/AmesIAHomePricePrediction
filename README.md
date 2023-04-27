@@ -2,13 +2,15 @@
 
 ---
 
-## Overview & Problem Statement
+## Problem Statement
+
 The goal of this project is to conduct a comprehensive analysis of the factors that exert the greatest influence on the market value of homes in Ames, IA. Additionally, we aim to develop a robust model that can accurately predict home prices, achieving an R-squared score of at least 0.8. 
 By doing so, this project will enable local real estate agents to offer more informed guidance to their clients, helping them to make better decisions when buying, renting, or selling properties in the area. 
 
 --- 
 
 ## Data
+
 The project uses two datasets: 
 * [train.csv](/data/original/train.csv): This data contains all of the training data for the model 
 * [test.csv](/data/original/test.csv): This data contains the test data for the model. The target variable (`saleprice`) is removed from this data set. 
@@ -16,41 +18,60 @@ The project uses two datasets:
 The following file is also available: 
 * [sample_sub_reg.csv](/data/original/sample_sub_reg.csv): This is an example of a correctly formatted submission for this challenge (with a random number provided as predictions for `saleprice`)
 
+Data cleaning steps were implemented for both the train and test datasets, which included handling missing and `NaN` values, renaming columns, dropping unnecessary columns, and dummifying columns.
+
 ---
 
-## Models
-The research process included the following steps: 
-### Data Import and Data Cleaning 
-The data cleaning steps for both the train and test datasets include handling missing and `NaN` values, renaming columns, dropping unnecessary columns, and dummifying columns.
+## Exploratory Data Analysis (EDA)
 
-### EDA
-The exploratory data analysis (EDA) process includes the creation of charts to explore the data and identify any unique trends. A histogram chart was created to show a distribution of home sale prices, which ranged from as low as 12,789 dollars to as high as 611,657 dollars, with a median sale price of around 162,500 dollars. A bar chart was created to show the three neighborhoods with the highest average sale price: Stone Brick, Northridge Heights, and Northridge. Another bar chart was created to show neighborhoods with the highest and lowest average sale price.
+During the EDA process, several charts were created to explore the data and identify unique trends in the housing market of Ames, IA. A histogram chart was used to show the distribution of home sale prices, which ranged from $12,789 to $611,657, with a median sale price of around $162,500. 
+![home_sale_price](/images/home_sale_price.png)
 
-### Feature Engineering
-Based on the Opendoor article outlining 8 critical factors that influence a home's value, the following interaction columns were created for the models:
-- Neighborhood Comps (Comparative Properties) & Location
-- Home Size and Usable Space
-- Age and Condition
-- Upgrades and Updates
-- Building Type and Style
-- Exterior and Interior Quality
-- Seasonal and Economic Factors
-- Housing Market Trends
+To identify key factors influencing home values, the Opendoor article's 8 critical factors were taken into account, and new interaction columns were created as a feature engineering approach for the models.
 
-### Modeling 
-The project uses the following models to predict home prices:
-- Multiple Linear Regression
-- Lasso Regression
-- Ridge Regression
+The dataset revealed a positive correlation between sale price and the neighborhoods of Northridge Heights, Northridge, and Stone Brick and Brick Face. A new column named `home_size` was created by combining `gr_liv_area` and `total_bsmt_sf`, which resulted in a stronger correlation with saleprice. Newer houses tend to have a higher appraised value, and the `year_built` variable showed a strong positive correlation with saleprice. An interaction column named `age_cond` was created to address the weak negative correlation between `overall_cond` and `saleprice`. `Overall_qual` had the strongest positive correlation with `saleprice`, indicating that homes with great finish quality or a move-in-ready condition are sold at higher prices.
+
+Updates and upgrades such as a good quality finished basement and remodels were found to increase the saleprice of a home. A new interaction column named `upgrades` was created by combining several variables related to upgrades and updates, but it did not result in a major improvement in the correlation with saleprice. Finally, the number and quality of bathrooms were found to have varying correlations with saleprice.
+
+## Model Building
+
+The modeling section of this project involves building several linear regression, Lasso, and Ridge models to predict sale prices based on various column features. Model 1 is a linear regression model using column features with a correlation coefficient of 0.5 or greater (or -0.5 or less) with sale price. Model 2 uses column features with a correlation coefficient of 0.25 or greater (or -0.25 or less), while Model 3 uses column features with a correlation coefficient of 0.15 or greater (or -0.15 or less). Model 4 and Model 5 both utilize Lasso and Ridge regression techniques, respectively, using column features with a correlation coefficient of 0.15 or greater (or -0.15 or less). Both scaled and unscaled versions of the Lasso and Ridge models will be built to compare their performance.
+
+-- 
+
+## Evaluation
+
+Here are the scores and metrics for different models: 
+
+|Model Type|Features|Training Score|Test Score|RMSE|
+|--|--|--|--|--|--|
+|Model 1 - OLS|Column features that have a correlation coefficient equal to or greater than 0.5/-0.5 with `saleprice`| 0.821|0.895|24241.895|
+|Model 2 - OLS|Column features that have a correlation coefficient equal to or greater than 0.25/-0.25 with `saleprice`|0.868|0.904|23088.501|
+|Model 3 - OLS|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.914|21917.108|
+|Model 4 - Lasso (Unscaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.915|21780.733|
+|Model 4 - Lasso (Scaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.914|21858.104|
+|Model 5 - Ridge (Unscaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.915|21770.103|
+
+The above table shows that Model 3 - OLS with features having correlation coefficient 0.15/-0.15 or greater - performed the best among all the models. This model achieved the highest test score of 0.914, the lowest RMSE of 21917.108, and a good training score of 0.88. The cross-validation score also shows good consistency in performance across folds.
+
+Also, another unique observations include the fact that the Lasso model's performance remained the same with or without scaling, while the performance of the Ridge model degraded significantly with scaling. 
+
+Additionally, the correlation threshold used for feature selection affected model performance, with Model 2 - OLS with features having correlation coefficient 0.25/-0.25 or greater, outperforming Model 1 - OLS with features having correlation coefficient 0.5/-0.5 or greater.
 
 --- 
 
-## Results 
-Based on our analysis, we have developed a model that can accurately predict home prices in Ames, IA, with an R-squared score of 0.914. Our analysis identified several key factors that have a significant influence on the market value of homes in the area, including the overall quality, the garage area, and the year the house was built. By taking these factors into account, our model can provide local real estate agents with more accurate pricing information, enabling them to offer more informed guidance to their clients. 
+## Conclusion & Recommendations
+
+Based on our analysis, we have developed a model that can accurately predict home prices in Ames, IA, with an R-squared score of 0.914. Our analysis identified several key factors that have a significant influence on the market value of homes in the area, including the overall quality, the garage area, and the year the house was built. By taking these factors into account, our model can provide local real estate agents with more accurate pricing information, enabling them to offer more informed guidance to their clients.
+
+However, there are still some areas where our model can be improved. For instance, we could try feature engineering by combining garage-related features to create a new interaction column. We could also explore different methods for handling missing values and outliers during data cleaning. Additionally, we recommend testing other models, such as Random Forest, Gradient Boosting, or Neural Networks, to see if they can provide even better performance.
 
 --- 
 
 ## Data Dictionary 
+
+Data dictionary is also available on [Kaggle](https://www.kaggle.com/competitions/project-2-regression-challenge-123/data). 
+
 |Feature|Type|Dataset|Description|
 |-------|----|-------|-----------|
 |Id|int64|
@@ -134,5 +155,3 @@ Based on our analysis, we have developed a model that can accurately predict hom
 |Yr Sold|int64||Year Sold|
 |Sale Type|object|WD Warranty Deed - Conventional/ CWD Warranty Deed - Cash/ VWD Warranty Deed - VA Loan/ New Home just constructed and sold/ COD Court Officer Deed/Estate/ Con Contract 15pct Down payment regular terms/ ConLw Contract Low Down payment and low interest/ ConLI Contract Low Interest/ ConLD Contract Low Down/ Oth Other|Type of sale|
 |SalePrice|int64|n/a|the property's sale price in dollars. This is the target variable that you're trying to predict for this challenge|
-
-Data dictionary is also available on [Kaggle](https://www.kaggle.com/competitions/project-2-regression-challenge-123/data). 
