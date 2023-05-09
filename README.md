@@ -51,6 +51,7 @@ Here are the scores and metrics for different models:
 |Model 4 - Lasso (Unscaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.915|21780.733|
 |Model 4 - Lasso (Scaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.914|21858.104|
 |Model 5 - Ridge (Unscaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.915|21770.103|
+|Model 5 - Ridge (Scaled)|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.912|82248223.907|
 
 The above table shows that Model 3 - OLS with features having correlation coefficient 0.15/-0.15 or greater - performed the best among all the models. This model achieved the highest test score of 0.914, the lowest RMSE of 21917.108, and a good training score of 0.88. The cross-validation score also shows good consistency in performance across folds.
 
