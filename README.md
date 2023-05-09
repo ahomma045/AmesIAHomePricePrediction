@@ -44,7 +44,7 @@ The modeling section of this project involves building several linear regression
 Here are the scores and metrics for different models: 
 
 |Model Type|Features|Training Score|Test Score|RMSE|
-|--|--|--|--|--|--|
+|--|--|--|--|--|
 |Model 1 - OLS|Column features that have a correlation coefficient equal to or greater than 0.5/-0.5 with `saleprice`| 0.821|0.895|24241.895|
 |Model 2 - OLS|Column features that have a correlation coefficient equal to or greater than 0.25/-0.25 with `saleprice`|0.868|0.904|23088.501|
 |Model 3 - OLS|Column features that have a correlation coefficient equal to or greater than 0.15/-0.15 with `saleprice`|0.88|0.914|21917.108|
